@@ -57,12 +57,13 @@ wic_locations
 ## ---- messages = FALSE, message=FALSE-----------------------------------------
 get_wcde(indicator = "growth", 
          country_name = c("India", "China"), 
-         scenario = 1:5) %>%
+         scenario = c(1:3, 21, 22)) %>%
   filter(period == "2095-2100")
 
 ## ---- messages = FALSE, message=FALSE-----------------------------------------
 get_wcde(indicator = "tfr", 
-         country_name = c("Kenya", "Nigeria", "Algeria"), scenario = c(2, 1, 5), 
+         country_name = c("Kenya", "Nigeria", "Algeria"),
+         scenario = 1:3, 
          include_scenario_names = TRUE) %>%
   filter(period == "2045-2050")
 
@@ -109,37 +110,83 @@ d %>%
 ## -----------------------------------------------------------------------------
 w <- d %>% 
   edu_group_sum(n = 4) %>%
-  filter(year == 2020) %>%
   mutate(pop = ifelse(test = sex == "Male", yes = -epop, no = epop),
          pop = pop/1e3) 
 w
 
-## ---- message=FALSE, warning=FALSE, fig.width=6, fig.height=6-----------------
+## ---- message=FALSE, warning=FALSE--------------------------------------------
 library(lemon)
 
-ggplot(data = w, 
-       mapping = aes(x = pop, y = age, fill = fct_rev(education))) +
+w %>%
+  filter(year == 2020) %>%
+  ggplot(mapping = aes(x = pop, y = age, fill = fct_rev(education))) +
   geom_col() +
   geom_vline(xintercept = 0, colour = "black") + 
   scale_x_symmetric(labels = abs) +
   scale_fill_manual(values = wic_col4, name = "Education") +
-  theme_bw()
+  labs(x = "Population (millions)", y = "Age") +
+  theme_bw() 
+  
 
-## ---- fig.width=6, fig.height=6-----------------------------------------------
+## -----------------------------------------------------------------------------
 w <- w %>%
-  # group_by(sex) ^>^
   mutate(pop_max = ifelse(sex == "Male", -max(pop), max(pop)))
 
-ggplot(data = w, 
-       mapping = aes(x = pop, y = age, fill = fct_rev(education))) +
+w %>%
+  filter(year == 2020) %>%
+  ggplot(mapping = aes(x = pop, y = age, fill = fct_rev(education))) +
   geom_col() +
   geom_vline(xintercept = 0, colour = "black") +
-  facet_wrap(facets = "sex", scales = "free_x", strip.position = "bottom") +
-  geom_blank(mapping = aes(x = pop_max * 1.1)) +
   scale_x_continuous(labels = abs, expand = c(0, 0)) +
   scale_fill_manual(values = wic_col4, name = "Education") +
+  labs(x = "Population (millions)", y = "Age") +
+  facet_wrap(facets = "sex", scales = "free_x", strip.position = "bottom") +
+  geom_blank(mapping = aes(x = pop_max * 1.1)) +
   theme(panel.spacing.x = unit(0, "pt"),
         strip.placement = "outside",
         strip.background = element_rect(fill = "transparent"),
         strip.text.x = element_text(margin = margin( b = 0, t = 0)))
+
+## ---- echo=FALSE, eval=FALSE--------------------------------------------------
+#  library(gganimate)
+#  
+#  g <- ggplot(data = w,
+#         mapping = aes(x = pop, y = age, fill = fct_rev(education))) +
+#    geom_col() +
+#    geom_vline(xintercept = 0, colour = "black") +
+#    scale_x_continuous(labels = abs, expand = c(0, 0)) +
+#    scale_fill_manual(values = wic_col4, name = "Education") +
+#    facet_wrap(facets = "sex", scales = "free_x", strip.position = "bottom") +
+#    geom_blank(mapping = aes(x = pop_max * 1.1)) +
+#    theme(panel.spacing.x = unit(0, "pt"),
+#          strip.placement = "outside",
+#          strip.background = element_rect(fill = "transparent"),
+#          strip.text.x = element_text(margin = margin(b = 0, t = 0))) +
+#    transition_time(time = year) +
+#    labs(x = "Population (millions)", y = "Age",
+#         title = 'SSP2 World Population {round(frame_time)}')
+#  
+#  animate(g, width = 672, height = 520, units = "px", res = 100,
+#          renderer = gifski_renderer())
+#  
+#  anim_save(filename = "../man/figures/world4_ssp2.gif")
+
+## ---- eval =FALSE-------------------------------------------------------------
+#  library(gganimate)
+#  
+#  ggplot(data = w,
+#         mapping = aes(x = pop, y = age, fill = fct_rev(education))) +
+#    geom_col() +
+#    geom_vline(xintercept = 0, colour = "black") +
+#    scale_x_continuous(labels = abs, expand = c(0, 0)) +
+#    scale_fill_manual(values = wic_col4, name = "Education") +
+#    facet_wrap(facets = "sex", scales = "free_x", strip.position = "bottom") +
+#    geom_blank(mapping = aes(x = pop_max * 1.1)) +
+#    theme(panel.spacing.x = unit(0, "pt"),
+#          strip.placement = "outside",
+#          strip.background = element_rect(fill = "transparent"),
+#          strip.text.x = element_text(margin = margin(b = 0, t = 0))) +
+#    transition_time(time = year) +
+#    labs(x = "Population (millions)", y = "Age",
+#         title = 'SSP2 World Population {round(frame_time)}')
 

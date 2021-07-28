@@ -2,7 +2,7 @@
 #'
 #' @description Downloads data from the Wittgenstein Centre Human Capital Data Explorer. Requires a working internet connection.
 #'
-#' @param indicator One character string based on the `name` column in the `wic_indicators` data frame, representing the variable to be interested.
+#' @param indicator One character string based on the `indicator` column in the `wic_indicators` data frame, representing the variable to be downloaded.
 #' @param scenario Vector of length one or more with numbers corresponding the scenarios. See details for more information. Defaults to 2 for the SSP2 Medium scenario.
 #' @param country_code Vector of length one or more of country numeric codes based on ISO 3 digit numeric values.
 #' @param country_name Vector of length one or more of country names. The corresponding country code will be guessed using the countrycodes package.
@@ -55,14 +55,14 @@
 #' | `1`        | Rapid Development (SSP1)              |
 #' | `2`        | Medium (SSP2)                         |
 #' | `3`        | Stalled Development (SSP3)            |
-#' | `4`        | Medium - Zero Migration (SSP2 - ZM)   |
-#' | `5`        | Medium - Double Migration (SSP2 - DM) |
+#' | `21`        | Medium - Zero Migration (SSP2 - ZM)   |
+#' | `22`        | Medium - Double Migration (SSP2 - DM) |
 #'
 #' See `wic_scenarios` data frame for more details.
 #'
 #'
 #' @md
-#' @return A tibble with the data selected.
+#' @return A [tibble][tibble::tibble-package] with the data selected.
 #' @export
 #'
 #' @examples
@@ -98,7 +98,7 @@ get_wcde <- function(indicator = "pop", scenario = 2,
   if(is.null(country_code)){
     d2 <- tibble::tibble(scenario = scenario) %>%
       dplyr::mutate(
-        u = paste0("http://dataexplorer.wittgensteincentre.org/wcde-data/data-batch/ssp",
+        u = paste0("http://dataexplorer.wittgensteincentre.org/wcde-data/data-batch/",
                    scenario, "/", indicator, ".csv"),
         d = purrr::map(
           .x = u,

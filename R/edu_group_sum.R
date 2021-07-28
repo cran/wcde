@@ -1,6 +1,6 @@
 #' Education Group Sums
 #'
-#' @description Cleans `epop` data downloaded using the `wcde()` function for summations of population by 4, 6 or 8 education groups.
+#' @description Cleans `epop` data, downloaded using the `wcde()` function, for summations of population by 4, 6 or 8 education groups.
 #'
 #' @param d Data frame downloaded from the
 #' @param n Number of education groups (from 4, 6 or 8)
@@ -14,7 +14,7 @@
 #'
 #' @examples
 #' library(tidyverse)
-#' epop_ssp2 %>%
+#' past_epop %>%
 #'   filter(year == 2020) %>%
 #'   mutate(scenario = 2) %>%
 #'   edu_group_sum()
