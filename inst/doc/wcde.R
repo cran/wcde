@@ -49,6 +49,7 @@ get_wcde(indicator = "sexratio",
 get_wcde(indicator = "tfr", 
          country_name = c("U.A.E", "Espania", "Österreich"))
 
+## ---- messages = FALSE, message=FALSE-----------------------------------------
 get_wcde(indicator = "etfr", country_code = c(44, 100))
 
 ## -----------------------------------------------------------------------------
