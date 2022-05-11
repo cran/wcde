@@ -94,25 +94,23 @@ mi %>%
   select(-ind) %>%
   unnest(cols = d)
 
-## ---- messages = FALSE, message=FALSE-----------------------------------------
-d <- get_wcde(indicator = "epop", country_code = 900)
-d
-
-## ---- warning=FALSE, message=FALSE--------------------------------------------
-d %>% 
-  edu_group_sum(n = 4) %>%
-  filter(year == 2020)
-
-d %>% 
-  edu_group_sum(n = 6) %>%
-  filter(year == 2020,
-         age == "30--34")
+## -----------------------------------------------------------------------------
+get_wcde(indicator = "pop", country_name = "India")
 
 ## -----------------------------------------------------------------------------
-w <- d %>% 
-  edu_group_sum(n = 4) %>%
-  mutate(pop = ifelse(test = sex == "Male", yes = -epop, no = epop),
-         pop = pop/1e3) 
+get_wcde(indicator = "pop", country_code = 900, pop_edu = "four")
+
+## -----------------------------------------------------------------------------
+get_wcde(indicator = "pop", country_code = 900, pop_edu = "six", pop_sex = "both")
+
+## -----------------------------------------------------------------------------
+w <- get_wcde(indicator = "pop", country_code = 900, 
+              pop_age = "all", pop_sex = "both", pop_edu = "four")
+w
+
+w <- w %>%
+  mutate(pop_pm = ifelse(test = sex == "Male", yes = -pop, no = pop),
+         pop_pm = pop_pm/1e3) 
 w
 
 ## ---- message=FALSE, warning=FALSE--------------------------------------------
@@ -120,7 +118,7 @@ library(lemon)
 
 w %>%
   filter(year == 2020) %>%
-  ggplot(mapping = aes(x = pop, y = age, fill = fct_rev(education))) +
+  ggplot(mapping = aes(x = pop_pm, y = age, fill = fct_rev(education))) +
   geom_col() +
   geom_vline(xintercept = 0, colour = "black") + 
   scale_x_symmetric(labels = abs) +
@@ -135,7 +133,7 @@ w <- w %>%
 
 w %>%
   filter(year == 2020) %>%
-  ggplot(mapping = aes(x = pop, y = age, fill = fct_rev(education))) +
+  ggplot(mapping = aes(x = pop_pm, y = age, fill = fct_rev(education))) +
   geom_col() +
   geom_vline(xintercept = 0, colour = "black") +
   scale_x_continuous(labels = abs, expand = c(0, 0)) +
@@ -152,7 +150,7 @@ w %>%
 #  library(gganimate)
 #  
 #  g <- ggplot(data = w,
-#         mapping = aes(x = pop, y = age, fill = fct_rev(education))) +
+#         mapping = aes(x = pop_pm, y = age, fill = fct_rev(education))) +
 #    geom_col() +
 #    geom_vline(xintercept = 0, colour = "black") +
 #    scale_x_continuous(labels = abs, expand = c(0, 0)) +
@@ -176,7 +174,7 @@ w %>%
 #  library(gganimate)
 #  
 #  ggplot(data = w,
-#         mapping = aes(x = pop, y = age, fill = fct_rev(education))) +
+#         mapping = aes(x = pop_pm, y = age, fill = fct_rev(education))) +
 #    geom_col() +
 #    geom_vline(xintercept = 0, colour = "black") +
 #    scale_x_continuous(labels = abs, expand = c(0, 0)) +

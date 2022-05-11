@@ -189,35 +189,56 @@ mi %>%
 
 # Working with population data
 
-The education population data in the data explorer, obtained by setting `indicator = "epop"` in `get_wcde()`, provide results by up to three different education categorizations (4, 6 and 8 education groups). 
+Population data for a range of age-sex-educational attainment combinations can be obtained by setting `indicator = "pop"` in `get_wcde()` and specifying a `pop_age`, `pop_sex` and `pop_edu` arguments. By default each of the three population breakdown arguments are set to "total"
 
-```{r, messages = FALSE, message=FALSE}
-d <- get_wcde(indicator = "epop", country_code = 900)
-d
+```{r}
+get_wcde(indicator = "pop", country_name = "India")
+```
+The `pop_age` argument can be set to `all` to get population data broken down in five-year age groups. The `pop_sex` argument can be set to `both` to get population data broken down into female and male groups. The `pop_edu` argument can be set to `four`, `six` or `eight` to get population data broken down into education categorizations with different levels of detail.
+
+```{r}
+get_wcde(indicator = "pop", country_code = 900, pop_edu = "four")
 ```
 
-As the data frame contains multiple groupings, the `edu_group_sum()` function can be used to provide education specific population data. Users can specify the education groupings by setting the `n` argument to 4, 6 or 8.
+The population breakdown arguments can be used in combination to provide further breakdowns, for example sex and education specific population totals
 
-```{r, warning=FALSE, message=FALSE}
-d %>% 
-  edu_group_sum(n = 4) %>%
-  filter(year == 2020)
-
-d %>% 
-  edu_group_sum(n = 6) %>%
-  filter(year == 2020,
-         age == "30--34")
+```{r}
+get_wcde(indicator = "pop", country_code = 900, pop_edu = "six", pop_sex = "both")
 ```
+
+The full age-sex-education specific data can also be obtained by setting `indicator = "epop"` in `get_wcde()`.
+<!-- The education population data in the data explorer, obtained by setting `indicator = "epop"` in `get_wcde()`, provide results by up to three different education categorizations (4, 6 and 8 education groups).  -->
+
+<!-- ```{r, messages = FALSE, message=FALSE} -->
+<!-- d <- get_wcde(indicator = "epop", country_code = 900) -->
+<!-- d -->
+<!-- ``` -->
+
+<!-- As the data frame contains multiple groupings, the `edu_group_sum()` function can be used to provide education specific population data. Users can specify the education groupings by setting the `n` argument to 4, 6 or 8. -->
+
+<!-- ```{r, warning=FALSE, message=FALSE} -->
+<!-- d %>%  -->
+<!--   edu_group_sum(n = 4) %>% -->
+<!--   filter(year == 2020) -->
+
+<!-- d %>%  -->
+<!--   edu_group_sum(n = 6) %>% -->
+<!--   filter(year == 2020, -->
+<!--          age == "30--34") -->
+<!-- ``` -->
 
 # Population pyramids
 
 Create population pyramids by setting male population values to negative equivalent to allow for divergent columns from the y axis.
 
 ```{r}
-w <- d %>% 
-  edu_group_sum(n = 4) %>%
-  mutate(pop = ifelse(test = sex == "Male", yes = -epop, no = epop),
-         pop = pop/1e3) 
+w <- get_wcde(indicator = "pop", country_code = 900, 
+              pop_age = "all", pop_sex = "both", pop_edu = "four")
+w
+
+w <- w %>%
+  mutate(pop_pm = ifelse(test = sex == "Male", yes = -pop, no = pop),
+         pop_pm = pop_pm/1e3) 
 w
 ```
 
@@ -235,7 +256,7 @@ library(lemon)
 
 w %>%
   filter(year == 2020) %>%
-  ggplot(mapping = aes(x = pop, y = age, fill = fct_rev(education))) +
+  ggplot(mapping = aes(x = pop_pm, y = age, fill = fct_rev(education))) +
   geom_col() +
   geom_vline(xintercept = 0, colour = "black") + 
   scale_x_symmetric(labels = abs) +
@@ -259,7 +280,7 @@ w <- w %>%
 
 w %>%
   filter(year == 2020) %>%
-  ggplot(mapping = aes(x = pop, y = age, fill = fct_rev(education))) +
+  ggplot(mapping = aes(x = pop_pm, y = age, fill = fct_rev(education))) +
   geom_col() +
   geom_vline(xintercept = 0, colour = "black") +
   scale_x_continuous(labels = abs, expand = c(0, 0)) +
@@ -282,7 +303,7 @@ Animate the pyramid through the past data and projection periods using the `tran
 library(gganimate)
 
 g <- ggplot(data = w, 
-       mapping = aes(x = pop, y = age, fill = fct_rev(education))) +
+       mapping = aes(x = pop_pm, y = age, fill = fct_rev(education))) +
   geom_col() +
   geom_vline(xintercept = 0, colour = "black") +
   scale_x_continuous(labels = abs, expand = c(0, 0)) +
@@ -311,7 +332,7 @@ anim_save(filename = "../man/figures/world4_ssp2.gif")
 library(gganimate)
 
 ggplot(data = w, 
-       mapping = aes(x = pop, y = age, fill = fct_rev(education))) +
+       mapping = aes(x = pop_pm, y = age, fill = fct_rev(education))) +
   geom_col() +
   geom_vline(xintercept = 0, colour = "black") +
   scale_x_continuous(labels = abs, expand = c(0, 0)) +
