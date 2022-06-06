@@ -79,13 +79,13 @@
 #' # SSP1 and SSP3 population by education for all countries
 #' get_wcde(scenario = c(1, 3), indicator = "tfr")
 #'
-#' # population totals (aggregated over age and sex)
+#' # population totals (aggregated over age, sex and education)
 #' get_wcde(indicator = "pop", country_name = "Austria")
 #'
-#' # population education group totals
+#' # population totals by education group
 #' get_wcde(indicator = "pop", country_name = "Austria", pop_edu = "four")
 #'
-#' # population age-sex group totals
+#' # population totals by age-sex group
 #' get_wcde(indicator = "pop", country_name = "Austria", pop_age = "all", pop_sex = "both")
 #' }
 get_wcde <- function(
@@ -185,24 +185,24 @@ get_wcde <- function(
       dplyr::relocate(dplyr::contains("scenario"), name, isono) %>%
       dplyr::rename(country_code = isono) %>%
       {if(stringr::str_detect(string = indicator, pattern = "-")) dplyr::rename(. , pop = dplyr::all_of(indicator)) else .}
+  }
 
-    if(stringr::str_detect(string = indicator, pattern = "pop-")){
-      # ^ avoids epop
-      if(pop_edu != "total"){
-        n_edu <- switch(pop_edu,
-                        "four" = 4,
-                        "six" = 6,
-                        "eight" = 8
-        )
-        d2 <- d2 %>%
-          {if(pop_age == "total") dplyr::mutate(., age = "All") else .} %>%
-          {if(pop_sex == "total") dplyr::mutate(., sex = "All") else .} %>%
-          dplyr::rename(epop = pop) %>%
-          edu_group_sum(n = n_edu, strip_totals = FALSE) %>%
-          {if(pop_age == "total") dplyr::select(., -age) else .} %>%
-          {if(pop_sex == "total") dplyr::select(., -sex) else .} %>%
-          dplyr::rename(pop = epop)
-      }
+  if(stringr::str_detect(string = indicator, pattern = "pop-")){
+    # ^ avoids epop
+    if(pop_edu != "total"){
+      n_edu <- switch(pop_edu,
+                      "four" = 4,
+                      "six" = 6,
+                      "eight" = 8
+      )
+      d2 <- d2 %>%
+        {if(pop_age == "total") dplyr::mutate(., age = "All") else .} %>%
+        {if(pop_sex == "total") dplyr::mutate(., sex = "All") else .} %>%
+        dplyr::rename(epop = pop) %>%
+        edu_group_sum(n = n_edu, strip_totals = FALSE) %>%
+        {if(pop_age == "total") dplyr::select(., -age) else .} %>%
+        {if(pop_sex == "total") dplyr::select(., -sex) else .} %>%
+        dplyr::rename(pop = epop)
     }
   }
   return(d2)

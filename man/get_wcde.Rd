@@ -102,13 +102,13 @@ get_wcde(scenario = c(1, 2), indicator = "e0", country_name = c("Vietnam", "UK")
 # SSP1 and SSP3 population by education for all countries
 get_wcde(scenario = c(1, 3), indicator = "tfr")
 
-# population totals (aggregated over age and sex)
+# population totals (aggregated over age, sex and education)
 get_wcde(indicator = "pop", country_name = "Austria")
 
-# population education group totals
+# population totals by education group
 get_wcde(indicator = "pop", country_name = "Austria", pop_edu = "four")
 
-# population age-sex group totals
+# population totals by age-sex group
 get_wcde(indicator = "pop", country_name = "Austria", pop_age = "all", pop_sex = "both")
 }
 }
