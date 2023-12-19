@@ -4,7 +4,13 @@
 \alias{get_wcde_single}
 \title{Pull multiple vectors for a given indicator, scenarios and .Rdata file names}
 \usage{
-get_wcde_single(indicator = NULL, scenario = 2, country_code = NULL)
+get_wcde_single(
+  indicator = NULL,
+  scenario = 2,
+  country_code = NULL,
+  server = NULL,
+  version = NULL
+)
 }
 \arguments{
 \item{indicator}{One character string based on the \code{name} column in the \code{wic_indicators} data frame, representing the variable to be interested.}
@@ -12,6 +18,10 @@ get_wcde_single(indicator = NULL, scenario = 2, country_code = NULL)
 \item{scenario}{Vector with a numbers corresponding the scenarios. See details in \code{wcde} for more information.}
 
 \item{country_code}{Vector of length one or more of country numeric codes based on ISO 3 digit numeric values.}
+
+\item{server}{Character string for server to download from. Defaults to \code{iiasa}, but can use \code{github} if IIASA server is down.}
+
+\item{version}{Character string for version of projections to obtain. Defaults to \code{wcde-v2}, but can use \code{wcde-v2} and \code{fume}. Scenario and indicator availability vary between versions.}
 }
 \value{
 A tibble with multiple columns.
@@ -19,3 +29,4 @@ A tibble with multiple columns.
 \description{
 Requires a working internet connection. Intended for internal use.
 }
+\keyword{internal}

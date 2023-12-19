@@ -25,3 +25,11 @@
 # wcde 0.0.5
 
 * Fixed bug for `pop_edu` argument for bulk downloads in `get_wcde()`
+
+# wcde 0.0.6
+
+* Add `server` argument in `get_wcde()`
+* Updated UK pop-age file for scenario 1 on server
+* Replaced `dplyr::summarize()` with `dplyr::reframe()` in `get_wcde_single()`
+* Add `version` argument in `get_wcde()`
+* Changed files on servers to `.rds` and code in `get_wcde()` to retrieve `.rds` data

@@ -4,11 +4,17 @@
 #' @param indicator One character string based on the `name` column in the `wic_indicators` data frame, representing the variable to be interested.
 #' @param scenario Vector with a numbers corresponding the scenarios. See details in `wcde` for more information.
 #' @param country_code Vector of length one or more of country numeric codes based on ISO 3 digit numeric values.
+#' @param server Character string for server to download from. Defaults to `iiasa`, but can use `github` if IIASA server is down.
+#' @param version Character string for version of projections to obtain. Defaults to `wcde-v2`, but can use `wcde-v2` and `fume`. Scenario and indicator availability vary between versions.
 #'
 #' @return A tibble with multiple columns.
-get_wcde_single <- function(indicator = NULL, scenario = 2, country_code = NULL){
+#' @keywords internal
+#' @export
+get_wcde_single <- function(indicator = NULL, scenario = 2, country_code = NULL,
+                            server = NULL, version = NULL){
   # scenario = c(1, 3); indicator = "tfr"; country_code = c(40, 100)
   # scenario = 2; indicator = "e0"; country_code = "900"
+  # server = "github"
   if(length(indicator) > 1){
     message("can only get data on one indicator at a time, taking first indicator given")
     indicator <- indicator[1]
@@ -20,7 +26,7 @@ get_wcde_single <- function(indicator = NULL, scenario = 2, country_code = NULL)
   #   message("can only get data on one scenario at a time, taking first scenario given")
   #   scenario <- scenario[1]
   # }
-  if(!all(scenario %in% c(1:5, 21, 22))){
+  if(!all(scenario %in% wcde::wic_scenarios$scenario)){
     message("scenario must be an integer in wic_scenarios$scenario")
   }
   v0 <- wcde::wic_indicators %>%
@@ -54,16 +60,39 @@ get_wcde_single <- function(indicator = NULL, scenario = 2, country_code = NULL)
   read_with_progress <- function(f){
     pb$tick()
     # message(f)
-    readr::read_csv(f, col_types = readr::cols(), guess_max = 1e5, progress = FALSE)
+    f %>%
+      url() %>%
+      readRDS()
+    # readr::read_csv(f, col_types = readr::cols(), guess_max = 1e5, progress = FALSE)
   }
+
+  # server <- match.arg(server)
+  # version <- match.arg(version)
+  if(server == "search-available" | is.null(server)){
+    server <- dplyr::case_when(
+      RCurl::url.exists("https://wicshiny2023.iiasa.ac.at/wcde-data/") ~ "iiasa",
+      # RCurl::url.exists("https://wicshiny.iiasa.ac.at/wcde-data/") ~ "iiasa",
+      RCurl::url.exists("https://github.com/guyabel/wcde-data/raw/main/") ~ "github",
+      RCurl::url.exists("https://shiny.wittgensteincentre.info/wcde-data/") ~ "1&1",
+      TRUE ~ "none-available"
+    )
+  }
+
+  server_url <- dplyr::case_when(
+    server == "iiasa" ~ "https://wicshiny2023.iiasa.ac.at/wcde-data/",
+    server == "iiasa-local" ~ "../wcde-data/",
+    server == "github" ~ "https://github.com/guyabel/wcde-data/raw/main/",
+    server == "1&1" ~ "https://shiny.wittgensteincentre.info/wcde-data/",
+    TRUE ~ server)
+
   pb <- progress::progress_bar$new(total = nrow(d0))
   pb$tick(0)
   d0 <- d0 %>%
-    dplyr::mutate(u = paste0("http://dataexplorer.wittgensteincentre.org/wcde-data/data-single/",
-                             scenario, "/", indicator, "/", country_code, ".csv"),
-                  d = purrr::map(.x = u, .f = ~read_with_progress(f = .x))) %>%
+    dplyr::mutate(u = paste0(server_url, version, "-single/", scenario, "/",
+                             indicator, "/", country_code, ".rds")) %>%
+    dplyr::mutate(d = purrr::map(.x = u, .f = ~read_with_progress(f = .x))) %>%
     dplyr::group_by(scenario) %>%
-    dplyr::summarise(dplyr::bind_cols(d), .groups = "drop_last") %>%
+    dplyr::reframe(dplyr::bind_cols(d)) %>%
     dplyr::ungroup()
   pb$terminate()
 
