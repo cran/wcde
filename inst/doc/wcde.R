@@ -36,7 +36,7 @@ get_wcde(indicator = "sexratio",
 
 ## -----------------------------------------------------------------------------
 wic_indicators %>%
-  filter(past) %>%
+  filter(`wcde-v2` == "past-available") %>%
   select(1:2)
 
 ## ---- messages = FALSE, message=FALSE-----------------------------------------
@@ -58,7 +58,7 @@ wic_locations
 ## ---- messages = FALSE, message=FALSE-----------------------------------------
 get_wcde(indicator = "growth",
          country_name = c("India", "China"),
-         scenario = c(1:3, 21, 22)) %>%
+         scenario = c(1:3, 22, 23)) %>%
   filter(period == "2095-2100")
 
 ## ---- messages = FALSE, message=FALSE-----------------------------------------
@@ -95,6 +95,16 @@ mi %>%
   unnest(cols = d)
 
 ## -----------------------------------------------------------------------------
+get_wcde(indicator = "etfr",
+         country_name = c("Brazil", "Albania"),
+         version = "wcde-v2")
+
+## -----------------------------------------------------------------------------
+get_wcde(indicator = "etfr",
+         country_name = c("Brazil", "Albania"), 
+         version = "wcde-v2", server = "github")
+
+## -----------------------------------------------------------------------------
 get_wcde(indicator = "pop", country_name = "India")
 
 ## -----------------------------------------------------------------------------
@@ -105,7 +115,8 @@ get_wcde(indicator = "pop", country_code = 900, pop_edu = "six", pop_sex = "both
 
 ## -----------------------------------------------------------------------------
 w <- get_wcde(indicator = "pop", country_code = 900,
-              pop_age = "all", pop_sex = "both", pop_edu = "four")
+              pop_age = "all", pop_sex = "both", pop_edu = "four",
+              version = "wcde-v2")
 w
 
 w <- w %>%
