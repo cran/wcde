@@ -1,17 +1,17 @@
-## ---- include = FALSE---------------------------------------------------------
+## ----include = FALSE----------------------------------------------------------
 knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>"
 )
 
 ## ----eval=FALSE---------------------------------------------------------------
-#  install.packages("wcde")
+# install.packages("wcde")
 
 ## ----eval=FALSE---------------------------------------------------------------
-#  library(devtools)
-#  install_github("guyabel/wcde", ref = "main")
+# library(devtools)
+# install_github("guyabel/wcde", ref = "main")
 
-## ---- messages = FALSE, message=FALSE-----------------------------------------
+## ----messages = FALSE, message=FALSE------------------------------------------
 library(wcde)
 # download education specific tfr data
 get_wcde(indicator = "etfr",
@@ -24,7 +24,7 @@ get_wcde(indicator = "eassr",
 ## -----------------------------------------------------------------------------
 find_indicator(x = "tfr")
 
-## ---- message=FALSE, warning=FALSE--------------------------------------------
+## ----message=FALSE, warning=FALSE---------------------------------------------
 library(tidyverse)
 get_wcde(indicator = "e0",
          country_name = c("Japan", "Australia")) %>%
@@ -36,32 +36,32 @@ get_wcde(indicator = "sexratio",
 
 ## -----------------------------------------------------------------------------
 wic_indicators %>%
-  filter(`wcde-v2` == "past-available") %>%
+  filter(`wcde-v3` == "past-available") %>%
   select(1:2)
 
-## ---- messages = FALSE, message=FALSE-----------------------------------------
+## ----messages = FALSE, message=FALSE------------------------------------------
 get_wcde(indicator = "sexratio",
          country_name = c("China", "South Korea")) %>%
   filter(year == 2020,
          age == "All")
 
-## ---- messages = FALSE, message=FALSE-----------------------------------------
+## ----messages = FALSE, message=FALSE------------------------------------------
 get_wcde(indicator = "tfr",
          country_name = c("U.A.E", "Espania", "Österreich"))
 
-## ---- messages = FALSE, message=FALSE-----------------------------------------
+## ----messages = FALSE, message=FALSE------------------------------------------
 get_wcde(indicator = "etfr", country_code = c(44, 100))
 
 ## -----------------------------------------------------------------------------
 wic_locations
 
-## ---- messages = FALSE, message=FALSE-----------------------------------------
+## ----messages = FALSE, message=FALSE------------------------------------------
 get_wcde(indicator = "growth",
          country_name = c("India", "China"),
          scenario = c(1:3, 22, 23)) %>%
   filter(period == "2095-2100")
 
-## ---- messages = FALSE, message=FALSE-----------------------------------------
+## ----messages = FALSE, message=FALSE------------------------------------------
 get_wcde(indicator = "tfr",
          country_name = c("Kenya", "Nigeria", "Algeria"),
          scenario = 1:3,
@@ -71,10 +71,10 @@ get_wcde(indicator = "tfr",
 ## -----------------------------------------------------------------------------
 wic_scenarios
 
-## ---- messages = FALSE, message=FALSE-----------------------------------------
+## ----messages = FALSE, message=FALSE------------------------------------------
 get_wcde(indicator = "mage")
 
-## ---- messages = FALSE, message=FALSE-----------------------------------------
+## ----messages = FALSE, message=FALSE------------------------------------------
 mi <- tibble(ind = c("odr", "nirate", "ggapedu25")) %>%
   mutate(d = map(.x = ind, .f = ~get_wcde(indicator = .x)))
 mi
@@ -116,7 +116,7 @@ get_wcde(indicator = "pop", country_code = 900, pop_edu = "six", pop_sex = "both
 ## -----------------------------------------------------------------------------
 w <- get_wcde(indicator = "pop", country_code = 900,
               pop_age = "all", pop_sex = "both", pop_edu = "four",
-              version = "wcde-v2")
+              version = "wcde-v3")
 w
 
 w <- w %>%
@@ -124,7 +124,7 @@ w <- w %>%
          pop_pm = pop_pm/1e3)
 w
 
-## ---- message=FALSE, warning=FALSE--------------------------------------------
+## ----message=FALSE, warning=FALSE---------------------------------------------
 library(lemon)
 
 w %>%
@@ -157,46 +157,46 @@ w %>%
         strip.background = element_rect(fill = "transparent"),
         strip.text.x = element_text(margin = margin( b = 0, t = 0)))
 
-## ---- echo=FALSE, eval=FALSE--------------------------------------------------
-#  library(gganimate)
-#  
-#  g <- ggplot(data = w,
-#         mapping = aes(x = pop_pm, y = age, fill = fct_rev(education))) +
-#    geom_col() +
-#    geom_vline(xintercept = 0, colour = "black") +
-#    scale_x_continuous(labels = abs, expand = c(0, 0)) +
-#    scale_fill_manual(values = wic_col4, name = "Education") +
-#    facet_wrap(facets = "sex", scales = "free_x", strip.position = "bottom") +
-#    geom_blank(mapping = aes(x = pop_max * 1.1)) +
-#    theme(panel.spacing.x = unit(0, "pt"),
-#          strip.placement = "outside",
-#          strip.background = element_rect(fill = "transparent"),
-#          strip.text.x = element_text(margin = margin(b = 0, t = 0))) +
-#    transition_time(time = year) +
-#    labs(x = "Population (millions)", y = "Age",
-#         title = 'SSP2 World Population {round(frame_time)}')
-#  
-#  animate(g, width = 672, height = 520, units = "px", res = 100,
-#          renderer = gifski_renderer())
-#  
-#  anim_save(filename = "../man/figures/world4_ssp2.gif")
+## ----echo=FALSE, eval=FALSE---------------------------------------------------
+# library(gganimate)
+# 
+# g <- ggplot(data = w,
+#        mapping = aes(x = pop_pm, y = age, fill = fct_rev(education))) +
+#   geom_col() +
+#   geom_vline(xintercept = 0, colour = "black") +
+#   scale_x_continuous(labels = abs, expand = c(0, 0)) +
+#   scale_fill_manual(values = wic_col4, name = "Education") +
+#   facet_wrap(facets = "sex", scales = "free_x", strip.position = "bottom") +
+#   geom_blank(mapping = aes(x = pop_max * 1.1)) +
+#   theme(panel.spacing.x = unit(0, "pt"),
+#         strip.placement = "outside",
+#         strip.background = element_rect(fill = "transparent"),
+#         strip.text.x = element_text(margin = margin(b = 0, t = 0))) +
+#   transition_time(time = year) +
+#   labs(x = "Population (millions)", y = "Age",
+#        title = 'SSP2 World Population {round(frame_time)}')
+# 
+# animate(g, width = 672, height = 520, units = "px", res = 100,
+#         renderer = gifski_renderer())
+# 
+# anim_save(filename = "../man/figures/world4_ssp2.gif")
 
-## ---- eval =FALSE-------------------------------------------------------------
-#  library(gganimate)
-#  
-#  ggplot(data = w,
-#         mapping = aes(x = pop_pm, y = age, fill = fct_rev(education))) +
-#    geom_col() +
-#    geom_vline(xintercept = 0, colour = "black") +
-#    scale_x_continuous(labels = abs, expand = c(0, 0)) +
-#    scale_fill_manual(values = wic_col4, name = "Education") +
-#    facet_wrap(facets = "sex", scales = "free_x", strip.position = "bottom") +
-#    geom_blank(mapping = aes(x = pop_max * 1.1)) +
-#    theme(panel.spacing.x = unit(0, "pt"),
-#          strip.placement = "outside",
-#          strip.background = element_rect(fill = "transparent"),
-#          strip.text.x = element_text(margin = margin(b = 0, t = 0))) +
-#    transition_time(time = year) +
-#    labs(x = "Population (millions)", y = "Age",
-#         title = 'SSP2 World Population {round(frame_time)}')
+## ----eval =FALSE--------------------------------------------------------------
+# library(gganimate)
+# 
+# ggplot(data = w,
+#        mapping = aes(x = pop_pm, y = age, fill = fct_rev(education))) +
+#   geom_col() +
+#   geom_vline(xintercept = 0, colour = "black") +
+#   scale_x_continuous(labels = abs, expand = c(0, 0)) +
+#   scale_fill_manual(values = wic_col4, name = "Education") +
+#   facet_wrap(facets = "sex", scales = "free_x", strip.position = "bottom") +
+#   geom_blank(mapping = aes(x = pop_max * 1.1)) +
+#   theme(panel.spacing.x = unit(0, "pt"),
+#         strip.placement = "outside",
+#         strip.background = element_rect(fill = "transparent"),
+#         strip.text.x = element_text(margin = margin(b = 0, t = 0))) +
+#   transition_time(time = year) +
+#   labs(x = "Population (millions)", y = "Age",
+#        title = 'SSP2 World Population {round(frame_time)}')
 
