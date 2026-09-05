@@ -101,8 +101,8 @@ get_wcde(indicator = "etfr",
 
 ## -----------------------------------------------------------------------------
 get_wcde(indicator = "etfr",
-         country_name = c("Brazil", "Albania"), 
-         version = "wcde-v2", server = "github")
+         country_name = c("Brazil", "Albania"),
+         server = "github")
 
 ## -----------------------------------------------------------------------------
 get_wcde(indicator = "pop", country_name = "India")

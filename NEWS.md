@@ -1,7 +1,12 @@
+# wcde 0.0.8.1
+
+* No change. Kicked off CRAN for nothing reason.
+
 # wcde 0.0.8
 
 * Added `closeConnections()` to `get_wcde_single()` to prevent open connections on server when downloading data
 * Updated for past data in `past_epop` and `wic_indicators` for back projections added to v3.
+
 
 # wcde 0.0.7
 

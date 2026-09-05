@@ -1,6 +1,6 @@
-798bfa2d55846db0f284645ecff72308 *DESCRIPTION
+124da3ad9fb42d2a240e6ce8d391b873 *DESCRIPTION
 20bc6619bbee3378ba2d17ac21174ce1 *NAMESPACE
-260dfcd3ca82b86453fae112c2579198 *NEWS.md
+4ceefb8a542fa3f99097b33161be5978 *NEWS.md
 8214f25c507adbc366e67079cd179825 *R/edu_group_sum.R
 2c18e0701d28def87b0674cb4016769f *R/every_other.R
 aecaf4025c9bffd6b3a19dcf3162dad9 *R/find_indicator.R
@@ -17,7 +17,7 @@ d26b83f8ffa76555e0ee9b46ba867a94 *R/wic_col8.R
 6db7e60cdf9284001567d8aec763dc84 *R/wic_locations.R
 de53a85c501ea0b684cab9dadab6dff9 *R/wic_scenarios.R
 75ef8cd6e5483099cd0a875ef5f45328 *R/zzz.R
-df9d7db00c9d548014770766afb245ab *build/vignette.rds
+09567162df4d9926919a7c067cc785c9 *build/vignette.rds
 5a159c8fd9428ae1b0c51aa7eb544e0f *data/past_epop.rda
 82631e9a1dc4f5cd0d466a863871a040 *data/wic_col4.rda
 e5a550809f0075f5df6cbabac362d9b1 *data/wic_col6.rda
@@ -26,9 +26,9 @@ d1550447679ae8c34ccaa1863c6f6cdb *data/wic_col8.rda
 9c66f9b302b5ce74c911e72edd6c9ef6 *data/wic_locations.rda
 7610798bf089f2ab816c0eb778da934d *data/wic_scenarios.rda
 5948a387d8ba3829d0caad68c43a472e *inst/WORDLIST
-78a76ba09a4c3c5c16dd50970492a453 *inst/doc/wcde.R
-29e7e8fd2b1d7adb3532e1ea4f1e8a57 *inst/doc/wcde.Rmd
-a6eac32dba25b73659c6a128601161e1 *inst/doc/wcde.html
+b059c38642dc211dc6c74d721e7a1419 *inst/doc/wcde.R
+43dc86d955046d4653886ef45d7951f7 *inst/doc/wcde.Rmd
+d9dc007c357061b70f772798f993305c *inst/doc/wcde.html
 026fceba592842c5a7b7607760ceb841 *man/edu_group_sum.Rd
 3a6fc389368f63c819fd12f56fc51789 *man/every_other.Rd
 8a29ba18c31859439ef1f14c832a1889 *man/figures/logo.png
@@ -45,4 +45,4 @@ de570f4bd2659c8f2cd27a85c5f92d4f *man/pipe.Rd
 e7c13028516a1198d62169eed44b4456 *man/wic_indicators.Rd
 8b47cb221a1bb38c1150735c4ccfae0c *man/wic_locations.Rd
 8824a9f5b731d151f78298a7871b38cd *man/wic_scenarios.Rd
-29e7e8fd2b1d7adb3532e1ea4f1e8a57 *vignettes/wcde.Rmd
+43dc86d955046d4653886ef45d7951f7 *vignettes/wcde.Rmd
